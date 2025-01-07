@@ -21,3 +21,19 @@ output "private_subnet_ids" {
 output "db_subnet_ids" {
   value = aws_subnet.db[*].id
 }
+
+output "nat_gw_id" {
+  value = aws_nat_gateway.nat_gw.id
+}
+
+output "public_route_table_id" {
+  value = aws_route_table.public.id
+}
+
+output "private_route_table_id" {
+  value = aws_route_table.private.id
+}
+
+output "db_route_table_id" {
+  value = aws_route_table.db.id
+}
