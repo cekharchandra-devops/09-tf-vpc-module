@@ -8,6 +8,8 @@ This Terraform module creates a Virtual Private Cloud (VPC) in AWS along with su
 
 ![alt text](peering.drawio.svg)
 
+The above diagram illustrates how the route table helps to determine communication pathways
+
 ## Features
 
 - Creates a VPC with the specified CIDR block.
@@ -93,10 +95,110 @@ module "vpc" {
    - Private and Database subnets: Route to NAT Gateway.
 7. **Associations**: Subnets are associated with their respective Route Tables.
 
+
+
+# VPC Peering Configuration
+
+for better understanding, considered first VPC name as `expense-vpc`.
+
+This document explains the configuration of a VPC peering connection between the `expense-dev` VPC and the `default` VPC, along with the routes created to enable communication.
+
+## Architecture Overview
+
+### VPCs Involved
+1. **expense-dev VPC**
+   - CIDR: 10.1.0.0/16
+   - Subnets: Public, Private, and Database
+2. **default VPC**
+   - CIDR: 172.31.0.0/16
+   - Default subnets
+
+### VPC Peering
+- Peering connection established from:
+  - **expense-dev VPC** → **default VPC**
+  - **default VPC** → **expense-dev VPC**
+
+### Routes
+1. **From expense-dev VPC to default VPC**:
+   - Added routes in public, private, and database route tables with `vpc_peering_connection_id`.
+2. **From default VPC to expense-dev VPC**:
+   - Added a route in the default route table with the `vpc_peering_connection_id`.
+
+## Resources Created
+
+### VPC Peering Connection
+- A VPC peering connection was established between the `expense-dev` VPC and the `default` VPC.
+
+### Route Tables and Routes
+1. **expense-dev VPC**:
+   - Public Route Table:
+     - Destination CIDR: 172.31.0.0/16
+     - Target: VPC Peering Connection
+   - Private Route Table:
+     - Destination CIDR: 172.31.0.0/16
+     - Target: VPC Peering Connection
+   - Database Route Table:
+     - Destination CIDR: 172.31.0.0/16
+     - Target: VPC Peering Connection
+
+2. **default VPC**:
+   - Default Route Table:
+     - Destination CIDR: 10.1.0.0/16
+     - Target: VPC Peering Connection
+
+## Terraform Configuration
+
+```hcl
+resource "aws_vpc_peering_connection" "example" {
+  peer_vpc_id = aws_vpc.default.id
+  vpc_id      = aws_vpc.expense_dev.id
+
+  tags = {
+    Name = "expense-dev-to-default"
+  }
+}
+
+resource "aws_route" "public_to_default" {
+  route_table_id        = aws_route_table.public.id
+  destination_cidr_block = aws_vpc.default.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.example.id
+}
+
+resource "aws_route" "default_to_expense" {
+  route_table_id        = aws_vpc.default.main_route_table_id
+  destination_cidr_block = aws_vpc.expense_dev.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.example.id
+}
+```
+
+## Diagram
+
+Below is a high-level representation of the setup:
+
+```
+expense-dev VPC (10.1.0.0/16)
+    ├── Public Subnet
+    ├── Private Subnet
+    └── Database Subnet
+        │
+        │ (VPC Peering Connection)
+        ▼
+default VPC (172.31.0.0/16)
+    ├── Default Subnet
+```
+
+## How It Works
+
+1. **VPC Peering Connection**: Establishes a direct connection between the two VPCs.
+2. **Routes**: Enables traffic flow between the VPCs by creating routes in the respective route tables.
+3. **Communication**: Instances in the subnets can communicate with each other over private IPs as long as the security groups and network ACLs allow the traffic.
+
 ## Prerequisites
 
-- AWS CLI configured with proper credentials.
-- Terraform installed on your local machine.
+- AWS CLI configured with appropriate permissions.
+- Terraform installed locally.
+
+
 
 
 
