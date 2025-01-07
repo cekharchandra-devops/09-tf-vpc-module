@@ -5,6 +5,9 @@ This Terraform module creates a Virtual Private Cloud (VPC) in AWS along with su
 
 ![alt text](vpc.drawio.svg)
 
+
+![alt text](peering.drawio.svg)
+
 ## Features
 
 - Creates a VPC with the specified CIDR block.
@@ -27,7 +30,7 @@ This Terraform module creates a Virtual Private Cloud (VPC) in AWS along with su
 ### Subnet Distribution
 - **Public Subnets**: For resources requiring direct internet access.
 - **Private Subnets**: For application servers with internet access through NAT Gateway.
-- **Database Subnets**: For database instances, isolated from internet access.
+- **Database Subnets**: For database instances with internet access through NAT Gateway.
 
 ## Usage
 

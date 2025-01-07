@@ -21,3 +21,24 @@ create db subnet group
 create elastic ip
 create nat gateway
 
+
+
+VPC Peering
+=============
+
+establish connection between two VPC (two VPC CIDR must be different )
+
+same account, same region with  different VPC can connect/Peering
+same account, different region with  different VPC can connect/Peering
+
+different account
+same region with two VPC can connect/Peering
+different region with two VPC can connect/Peering
+
+resource aw vpc peering connection
+
+count variable
+
+vpc id 
+
+vpc peering id (data source)
