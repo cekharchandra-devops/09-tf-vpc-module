@@ -3,6 +3,8 @@
 
 This Terraform module creates a Virtual Private Cloud (VPC) in AWS along with subnets, route tables, NAT Gateway, and associated resources. The module is designed to set up a highly available network infrastructure across two Availability Zones.
 
+![alt text](vpc.drawio.svg)
+
 ## Features
 
 - Creates a VPC with the specified CIDR block.
