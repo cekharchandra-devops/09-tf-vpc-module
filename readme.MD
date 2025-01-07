@@ -62,8 +62,8 @@ module "vpc" {
 | `public_subnets`     | `list(string)`| CIDR blocks for public subnets                               | n/a             |
 | `private_subnets`    | `list(string)`| CIDR blocks for private subnets                              | n/a             |
 | `database_subnets`   | `list(string)`| CIDR blocks for database subnets                             | n/a             |
-| `project_name` | `string`        |       project_name is required                        | `false`         |
-| `environment` | `string`        | environment is requied                              | `false`         |
+| `project_name` | `string`        |       project_name is required                        | `no default`         |
+| `environment` | `string`        | environment is requied                              | `no default`         |
 
 ## Outputs
 
