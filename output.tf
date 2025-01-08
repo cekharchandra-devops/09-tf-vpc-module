@@ -37,3 +37,7 @@ output "private_route_table_id" {
 output "db_route_table_id" {
   value = aws_route_table.db.id
 }
+
+output "db_subnet_group_name" {
+  value = aws_db_subnet_group.default.name
+}
